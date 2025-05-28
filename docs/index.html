@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>RAP</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Not All Thats Rare Is Lost: Causal Paths to Rare Concept Synthesis">
+  <meta name="keywords"
+    content="image generation; deep learning; causal reasoning; rare concept synthesis; diffusion model; flux; sd3">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not All Thats Rare Is Lost</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<style>
+  .best {
+    background-color: rgb(255, 138, 138, 0.7);
+  }
+
+  .second-best {
+    background-color: rgb(255, 145, 0, 0.6);
+  }
+
+  #btt-bttn {
+    display: inline-block;
+    background-color: #209cee;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border-radius: 4px;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    transition: background-color .3s,
+      opacity .5s, visibility .5s;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1000;
+  }
+
+  #btt-bttn::after {
+    content: "\f077";
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 2em;
+    line-height: 50px;
+    color: #fff;
+  }
+
+  #btt-bttn:hover {
+    cursor: pointer;
+    background-color: #333;
+  }
+
+  #btt-bttn:active {
+    background-color: #555;
+  }
+
+  #btt-bttn.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  ol.citation>li::marker {
+    content: "[" counter(list-item) "] ";
+  }
+</style>
+
+<body>
+  <a id="btt-bttn"></a>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-2 publication-title">Not All Thats Rare Is Lost: Causal Paths to Rare Concept Synthesis
+            </h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://github.com/Justin900429" target="_blank">Bo-Kai Ruan</a>,</span>
+              <span class="author-block">
+                <a href="#">Zi-Xiang Ni</a>,</span>
+              <span class="author-block">
+                <a href="#">Bo-Lun Huang</a>,</span>
+              <span class="author-block">
+                <a href="#">Teng-Fang Hsiao</a>,</span>
+              <span class="author-block">
+                <a href="https://basiclab.lab.nycu.edu.tw" target="_blank">Hong-Han Shuai</a>,
+              </span>
+              <div class="is-size-5 publication-authors">
+                <span class="author-block">National Yang Ming Chiao Tung University</span>
+              </div>
+            </div>
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2505.20808" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/basiclab/RAP" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code [WIP]</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-centered is-max-desktop">
+      <div class="hero-body">
+        <!-- <video id="teaser" autoplay muted loop playsinline height="100%"> -->
+        <!-- <source src="../Inference.gif" type="video/mp4"> -->
+        <img src="./static/images/teaser.svg" style=" display: block;
+  margin-left: auto;
+  margin-right: auto;" alt="this slowpoke moves" />
+        <br />
+
+        <!-- </video> -->
+        <h2 class="subtitle has-text-centered">
+          <strong>Generated samples from RAP across different models for rare concept prompts.</strong> Our method
+          adaptively adjusts the switching point and applies second-order denoising, producing more accurate and
+          consistent results across different settings.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Diffusion models have shown strong capabilities in high-fidelity image generation but often falter when
+              synthesizing rare concepts, <i>i.e.</i>, prompts that are infrequently observed in the training
+              distribution. In
+              this paper, we introduce RAP, a principled framework that treats rare concept generation as navigating
+              a latent causal path: a progressive, model-aligned trajectory through the generative space from frequent
+              concepts to rare targets. Rather than relying on heuristic prompt alternation, we theoretically justify
+              that rare prompt guidance can be approximated by semantically related frequent prompts. We then formulate
+              prompt switching as a dynamic process based on score similarity, enabling adaptive stage transitions.
+              Furthermore, we reinterpret prompt alternation as a second-order denoising mechanism, promoting smooth
+              semantic progression and coherent visual synthesis. Through this causal lens, we align input scheduling
+              with the model's internal generative dynamics. Experiments across diverse diffusion backbones demonstrate
+              that RAP consistently enhances rare concept generation, outperforming strong baselines in both
+              automated evaluations and human studies.
+            </p>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Issues to Solve</h2>
+          <div class="columns is-centered">
+            <div class="column is-7">
+              <img src="static/images/stage.svg" , alt="stage switching"
+                style=" display: block; margin-left: auto; margin-right: auto; width: 100%;" />
+            </div>
+            <div class="column is-5">
+              <img src="static/images/inconsistent.svg" , alt="inconsistent"
+                style=" display: block; margin-left: auto; margin-right: auto; width: 100%;" />
+            </div>
+          </div>
+          <p><strong>Left</strong>: Switching too early may miss the "horned" detail; switching too late may ignore the
+            "elephant".
+            <strong>Right</strong>: Abrupt shifts between prompts can disrupt the continuity of the generative
+            trajectory.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-6">
+          <h3 class="title is-4">✨ A. Adaptive Prompt Switching</h3>
+          <img src="static/images/alternate_prompt.svg" , alt="alternate prompt"
+            style=" display: block; margin-left: auto; margin-right: auto; width: 100%;" />
+          <p>To support adaptive prompt switching, we propose to use a score-based model to estimate the score of the
+            rare concept at each stage. We then use the score to determine the switching point.</p>
+        </div>
+        <div class="column is-6">
+          <h3 class="title is-4">🚀 B. Second-Order Denoising</h3>
+          <img src="static/images/denoising.svg" , alt="second-order denoising"
+            style=" display: block; margin-left: auto; margin-right: auto; width: 90%;" />
+          <p>We propose the prompt switching as a second-order denoising mechanism, promoting smooth semantic
+            progression and coherent visual synthesis.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">📸 C. Visualization</h2>
+      <img src="static/images/visualization.svg" , alt="visualization"
+        style=" display: block; margin-left: auto; margin-right: auto; width: 100%;" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">🎯 D. Matching Score</h2>
+      <div class="columns is-centered has-text-centered">
+        <img src="static/images/score.svg" , alt="score"
+          style=" display: block; margin-left: auto; margin-right: auto; width: 100%;" />
+      </div>
+      <div class="content has-text-justified">
+        <p>Illustration of average matching score delta_t for different prompt stages with SD3. Different color
+          represents different prompt, and the horizontal dashed line indicates the threshold. The matching score for
+          each
+          prompt tends to decrease over time, supporting our proposed criterion that once the score difference becomes
+          sufficiently small. Additionally, transient spikes in the matching score may occur when transitioning to
+          a new prompt, indicating that the newly introduced prompt does not yet match the underlying distribution.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+            BobTex
+        </code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <a class="icon-link" target="_blank" href="https://arxiv.org/abs/2505.20808">
+          <i class="fas fa-file-pdf"></i>
+        </a>
+        <a class="icon-link" target="_blank" href="https://github.com/basiclab/RAP" class="external-link" disabled>
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p class="footer-paragraph">
+              This page is adapted from the <a href="https://github.com/nerfies/nerfies.github.io">Nerfies project
+                page</a> and is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+<script>
+  var btn = $('#btt-bttn');
+
+  $(window).scroll(function () {
+    if ($(window).scrollTop() > 300) {
+      btn.addClass('show');
+    } else {
+      btn.removeClass('show');
+    }
+  });
+
+  btn.on('click', function (e) {
+    e.preventDefault();
+    $('html, body').animate({ scrollTop: 0 }, '300');
+  });
+
+  $('ol.citation > li').each(function (i, el) {
+    el.id = "cite-" + (i + 1);
+  });
+</script>
+
+</html>
